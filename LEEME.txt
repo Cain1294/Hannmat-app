@@ -1,0 +1,16 @@
+HANNMAT PARA WHATSAPP - proyecto Android (Kotlin, sin librerías externas)
+
+COMPILAR (elige una):
+A) Android Studio: File > Open > esta carpeta. Cuando termine de sincronizar:
+   Build > Build APK(s). El APK queda en app/build/outputs/apk/debug/app-debug.apk
+B) Sin instalar nada: sube esta carpeta a un repositorio de GitHub (rama main).
+   En la pestaña Actions corre "Compilar APK de Hannmat" y descarga el artefacto Hannmat-apk.
+Luego sube el APK en el panel: Admin > App WhatsApp > Subir APK.
+
+USO EN EL CELULAR:
+1. Instala el APK (permite "orígenes desconocidos").
+2. Abre el panel de tu sitio desde el celular y toca el botón verde "Configurar la app automáticamente".
+   (o escribe a mano la dirección y la clave que muestra el panel)
+3. Da el permiso de acceso a notificaciones y quita el ahorro de batería.
+4. Agrega los contactos/grupos que Hannmat debe contestar y enciende el interruptor.
+Las vacantes se consultan en vivo en tu servidor: no hay nada que sincronizar.
