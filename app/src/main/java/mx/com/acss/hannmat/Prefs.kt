@@ -35,6 +35,11 @@ class Prefs(ctx: Context) {
         get() = sp.getBoolean("groupTrigger", true)
         set(v) { sp.edit().putBoolean("groupTrigger", v).apply() }
 
+    /** Contestar también a números que no están guardados como contacto (el chat aparece como un número). */
+    var contestarDesconocidos: Boolean
+        get() = sp.getBoolean("contestarDesconocidos", false)
+        set(v) { sp.edit().putBoolean("contestarDesconocidos", v).apply() }
+
     /** Nombres de contactos y grupos (tal como salen en WhatsApp) a los que Hannmat SÍ contesta. */
     var allowed: List<String>
         get() = (sp.getString("allowed", "") ?: "").split("\n").map { it.trim() }.filter { it.isNotEmpty() }
