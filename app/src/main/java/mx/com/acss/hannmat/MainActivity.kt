@@ -316,6 +316,18 @@ class MainActivity : Activity() {
         }
         filaGrupos.addView(swGrupos, lp(ajusta, ajusta).apply { leftMargin = dp(10) })
         tarjetaChats.addView(filaGrupos, lp(llena, ajusta, 18))
+
+        val filaDesconocidos = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+        val colDesconocidos = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        colDesconocidos.addView(txt("Contestar también a números desconocidos", 14.5f, c(R.color.texto), true))
+        colDesconocidos.addView(txt("Para candidatos que te escriben y no están guardados en tus contactos (el chat aparece como número). No aplica a grupos.", 12.5f, c(R.color.texto_suave)), lp(llena, ajusta, 2))
+        filaDesconocidos.addView(colDesconocidos, lp(0, ajusta, peso = 1f))
+        val swDesconocidos = Switch(this).apply {
+            isChecked = prefs.contestarDesconocidos
+            setOnCheckedChangeListener { _, marcado -> prefs.contestarDesconocidos = marcado }
+        }
+        filaDesconocidos.addView(swDesconocidos, lp(ajusta, ajusta).apply { leftMargin = dp(10) })
+        tarjetaChats.addView(filaDesconocidos, lp(llena, ajusta, 18))
         contenido.addView(tarjetaChats, lp(llena, ajusta, 0, 14))
 
         // 4) Actividad
