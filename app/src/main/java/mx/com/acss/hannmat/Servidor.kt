@@ -92,7 +92,7 @@ object Servidor {
     }
 
     /** Una petición HTTP con la identificación de navegador. Si [cuerpo] no es null se manda como POST. */
-    private fun llamar(ctx: Context, url: String, cuerpo: String?, key: String?, cookie: String?): Crudo {
+    private fun llamar(ctx: Context, url: String, cuerpo: String?, key: String?, cookie: String?, ligero: Boolean = false): Crudo {
         var conn: HttpURLConnection? = null
         try {
             conn = Red.abrir(url, File(ctx.filesDir, "aia"))
@@ -101,18 +101,24 @@ object Servidor {
             conn.readTimeout = 45000
             conn.setRequestProperty("User-Agent", USER_AGENT)
             conn.setRequestProperty("Accept", "application/json, text/plain, */*")
-            conn.setRequestProperty("Accept-Language", "es-MX,es;q=0.9,en;q=0.8")
+            // Cada petición en su propia conexión: así no se arrastra nada de la petición anterior (la de la verificación).
+            conn.setRequestProperty("Connection", "close")
             val origen = origenDe(url)
-            if (origen.isNotEmpty()) {
-                conn.setRequestProperty("Origin", origen)
-                conn.setRequestProperty("Referer", "$origen/")
+            if (!ligero) {
+                conn.setRequestProperty("Accept-Language", "es-MX,es;q=0.9,en;q=0.8")
+                if (origen.isNotEmpty()) {
+                    conn.setRequestProperty("Origin", origen)
+                    conn.setRequestProperty("Referer", "$origen/")
+                }
             }
             if (cookie != null) conn.setRequestProperty("Cookie", "__test=$cookie")
             if (key != null) conn.setRequestProperty("X-Bot-Key", key)
             if (cuerpo != null) {
+                val bytes = cuerpo.toByteArray(Charsets.UTF_8)
                 conn.doOutput = true
+                conn.setFixedLengthStreamingMode(bytes.size)
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                conn.outputStream.use { it.write(cuerpo.toByteArray(Charsets.UTF_8)) }
+                conn.outputStream.use { it.write(bytes) }
             }
             val codigo = conn.responseCode
             val flujo = if (codigo in 200..299) conn.inputStream else conn.errorStream
@@ -154,7 +160,13 @@ object Servidor {
                 if (cookie != null) {
                     cookieTest = cookie
                     r = llamar(ctx, url, cuerpo, p.key, cookie)
-                    intento = "\n(1er intento: código $primero; verificación resuelta; 2do intento: código ${r.codigo})"
+                    var detalleIntentos = "1er intento: código $primero; verificación resuelta; 2do intento: código ${r.codigo}"
+                    if (!esJson(r.cuerpo) && r.codigo == 400) {
+                        // Último recurso: la misma petición con lo mínimo (sin Origin, Referer ni idioma).
+                        r = llamar(ctx, url, cuerpo, p.key, cookie, true)
+                        detalleIntentos += "; 3er intento (versión mínima): código ${r.codigo}"
+                    }
+                    intento = "\n($detalleIntentos)"
                 } else {
                     intento = "\n(1er intento: código $primero; no se pudo resolver la verificación del hosting)"
                 }
