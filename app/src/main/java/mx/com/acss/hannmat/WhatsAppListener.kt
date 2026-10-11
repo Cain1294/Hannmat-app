@@ -56,7 +56,10 @@ class WhatsAppListener : NotificationListenerService() {
         prefs.addRecent(titulo) // para poder elegirlo con un toque en la app
 
         if (!prefs.enabled || prefs.url.isBlank() || prefs.key.isBlank()) return
-        val permitido = prefs.allowed.any { val a = Prefs.norm(it); val t = Prefs.norm(titulo); t == a || t.contains(a) }
+        // Un chat de alguien no guardado en contactos aparece con su número como nombre (sin letras, 7 dígitos o más).
+        val esNumeroDesconocido = !esGrupo && titulo.count { it.isDigit() } >= 7 && titulo.none { it.isLetter() }
+        val permitido = (prefs.contestarDesconocidos && esNumeroDesconocido) ||
+            prefs.allowed.any { val a = Prefs.norm(it); val t = Prefs.norm(titulo); t == a || t.contains(a) }
         if (!permitido) return
 
         var mensaje = texto.trim()
