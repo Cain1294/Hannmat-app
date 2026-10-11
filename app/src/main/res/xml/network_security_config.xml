@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Todo el tráfico de la app va por HTTPS. La ÚNICA excepción es la descarga del certificado "intermedio" de la
+  autoridad certificadora (campo AIA del certificado): esas direcciones se publican por http por diseño y lo que se
+  descarga se verifica por firma contra las raíces del teléfono, así que no afecta la seguridad.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">lencr.org</domain>
+        <domain includeSubdomains="true">letsencrypt.org</domain>
+        <domain includeSubdomains="true">pki.goog</domain>
+        <domain includeSubdomains="true">sectigo.com</domain>
+        <domain includeSubdomains="true">usertrust.com</domain>
+        <domain includeSubdomains="true">comodoca.com</domain>
+        <domain includeSubdomains="true">zerossl.com</domain>
+        <domain includeSubdomains="true">digicert.com</domain>
+        <domain includeSubdomains="true">globalsign.com</domain>
+        <domain includeSubdomains="true">godaddy.com</domain>
+        <domain includeSubdomains="true">amazontrust.com</domain>
+        <domain includeSubdomains="true">ssl.com</domain>
+        <domain includeSubdomains="true">entrust.net</domain>
+        <domain includeSubdomains="true">identrust.com</domain>
+        <domain includeSubdomains="true">certum.pl</domain>
+        <domain includeSubdomains="true">trust-provider.com</domain>
+        <domain includeSubdomains="true">gogetssl.com</domain>
+    </domain-config>
+</network-security-config>

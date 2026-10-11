@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fondo">#F3F6FB</color>
+    <color name="tarjeta">#FFFFFF</color>
+    <color name="borde">#E1E7F0</color>
+    <color name="campo">#F6F8FC</color>
+    <color name="texto">#14213D</color>
+    <color name="texto_suave">#5B6779</color>
+    <color name="marca">#1E6FD9</color>
+    <color name="marca_oscuro">#14509E</color>
+    <color name="marca_suave">#EAF2FD</color>
+    <color name="sobre_marca">#FFFFFF</color>
+    <color name="ok">#1A8F3C</color>
+    <color name="ok_suave">#E4F5E9</color>
+    <color name="alerta">#B45309</color>
+    <color name="alerta_suave">#FEF3C7</color>
+    <color name="error">#C0392B</color>
+    <color name="error_suave">#FDEAE7</color>
+</resources>

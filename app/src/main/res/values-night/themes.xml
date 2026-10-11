@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Tema" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:statusBarColor">@color/marca_oscuro</item>
+        <item name="android:navigationBarColor">@color/fondo</item>
+        <item name="android:textColorPrimary">@color/texto</item>
+        <item name="android:textColorSecondary">@color/texto_suave</item>
+        <item name="android:colorAccent">@color/marca</item>
+        <item name="android:colorControlActivated">@color/marca</item>
+        <item name="android:colorPrimary">@color/marca_oscuro</item>
+    </style>
+</resources>

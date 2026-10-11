@@ -1,0 +1,38 @@
+HANNMAT PARA WHATSAPP (v2.2) - proyecto Android (Kotlin, sin librerias externas)
+
+COMPILAR (elige una):
+A) Android Studio: File > Open > esta carpeta. Cuando termine de sincronizar:
+   Build > Build APK(s). El APK queda en app/build/outputs/apk/debug/app-debug.apk
+B) Sin instalar nada: sube esta carpeta a un repositorio de GitHub (rama main).
+   En la pestana Actions corre "Compilar APK de Hannmat" y descarga el artefacto Hannmat-apk.
+Luego sube el APK en el panel: Admin > App WhatsApp > Subir APK.
+
+IMPORTANTE AL ACTUALIZAR: si ya tenias Hannmat instalada, desinstalala primero (cada compilacion de GitHub
+se firma con una llave distinta y Android no deja instalar encima). Despues abre el panel en el celular y toca
+el boton verde "Configurar la app automaticamente": la direccion y la clave se llenan solas.
+
+NOVEDADES 2.2
+- El hosting gratuito (InfinityFree) pide a cada visitante resolver una verificacion en JavaScript antes de dejarlo
+  entrar; una app no la resuelve y recibia 403. Ahora la app hace lo mismo que el navegador: lee la verificacion
+  (descifrado AES con tres numeros de la propia pagina), guarda la cookie __test y repite la peticion. Ver Servidor.kt.
+  Si InfinityFree cambia su verificacion, puede dejar de funcionar; el mensaje de error muestra lo que contesto.
+
+NOVEDADES 2.1
+- Corrige el error "El servidor no contestó con datos de Hannmat (código 403)": el hosting gratuito bloquea las
+  peticiones que se identifican como app (Dalvik/Java). Ahora la app se identifica como un navegador (Chrome) y manda
+  los encabezados normales (Accept, Origin, Referer). Los errores muestran lo que dijo el servidor, para saber la causa.
+
+NOVEDADES 2.0
+- Corrige el error "Trust anchor for certification path not found": si el hosting (InfinityFree) no manda el
+  certificado intermedio, la app lo descarga sola (campo AIA del certificado) y valida la cadena contra las
+  raices del telefono. No se desactiva ninguna verificacion de seguridad. Ver Red.kt.
+- Pantalla nueva: estado arriba, pasos guiados, conexion con prueba, lista de chats y actividad. Modo oscuro.
+- Todo se guarda solo (ya no hay boton Guardar). Los errores se explican en espanol sencillo.
+
+USO EN EL CELULAR:
+1. Instala el APK (permite "origenes desconocidos").
+2. Abre el panel de tu sitio desde el celular y toca el boton verde "Configurar la app automaticamente".
+   (o escribe a mano la direccion y la clave que muestra el panel)
+3. Da el permiso de acceso a notificaciones y quita el ahorro de bateria (la app te lleva con un toque).
+4. Agrega los contactos/grupos que Hannmat debe contestar y enciende el interruptor.
+Las vacantes se consultan en vivo en tu servidor: no hay nada que sincronizar.
