@@ -145,12 +145,18 @@ object Servidor {
             val cuerpo = "contacto=${enc(contacto)}&mensaje=${enc(mensaje)}&key=${enc(p.key)}" + (if (reset) "&reset=1" else "")
             var r = llamar(ctx, url, cuerpo, p.key, cookieTest)
 
-            // Si el hosting contestó con su verificación (o con 403 sin datos de Hannmat), se resuelve y se repite UNA vez.
-            if (!esJson(r.cuerpo) && (r.codigo == 403 || esDesafio(r.cuerpo))) {
+            // Si el hosting contestó con su verificación (o con 400/403 sin datos de Hannmat), se resuelve y se repite UNA vez.
+            // El 400 "Bad Request openresty" lo da el hosting cuando el POST llega sin la cookie de verificación.
+            var intento = ""
+            if (!esJson(r.cuerpo) && (r.codigo == 400 || r.codigo == 403 || esDesafio(r.cuerpo))) {
+                val primero = r.codigo
                 val cookie = conseguirCookie(ctx, url, r.cuerpo)
                 if (cookie != null) {
                     cookieTest = cookie
                     r = llamar(ctx, url, cuerpo, p.key, cookie)
+                    intento = "\n(1er intento: código $primero; verificación resuelta; 2do intento: código ${r.codigo})"
+                } else {
+                    intento = "\n(1er intento: código $primero; no se pudo resolver la verificación del hosting)"
                 }
             }
 
@@ -160,11 +166,12 @@ object Servidor {
             if (json == null) {
                 val detalle = resumenCuerpo(txt)
                 val aviso = if (detalle.isNotEmpty()) "\nEl servidor dijo: «$detalle»" else ""
+                val aviso2 = aviso + intento
                 return Respuesta(false, when {
                     codigo == 404 -> "No se encontró esa dirección (error 404). Revisa que termine en /api/bot.php?i=1."
-                    codigo >= 500 -> "Tu servidor tuvo un problema (código $codigo). Intenta de nuevo en unos minutos.$aviso"
-                    codigo == 403 -> "El hosting sigue bloqueando la petición (código 403), incluso después de resolver su verificación. Revisa que la dirección termine en /api/bot.php?i=1.$aviso"
-                    else -> "El servidor no contestó con datos de Hannmat (código $codigo). Si tu hosting es InfinityFree, la dirección debe terminar en ?i=1.$aviso"
+                    codigo >= 500 -> "Tu servidor tuvo un problema (código $codigo). Intenta de nuevo en unos minutos.$aviso2"
+                    codigo == 403 -> "El hosting sigue bloqueando la petición (código 403), incluso después de resolver su verificación. Revisa que la dirección termine en /api/bot.php?i=1.$aviso2"
+                    else -> "El servidor no contestó con datos de Hannmat (código $codigo). Si tu hosting es InfinityFree, la dirección debe terminar en ?i=1.$aviso2"
                 })
             }
             if (codigo == 401) {
